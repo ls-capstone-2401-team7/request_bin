@@ -1,0 +1,11 @@
+{
+  "name": "request_bin_backend",
+  "version": "1.0.0",
+  "description": "Backend for request bind",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Team 7",
+  "license": "ISC"
+}
