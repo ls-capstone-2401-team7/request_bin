@@ -46,9 +46,9 @@ async function getBinId(binPath) {
   }
 }
 
-async function createRequest(binId, mongoId, receivedAt, httpMethod, httpPath) {
-  const text = 'INSERT INTO requests (bin_id, mongo_id, received_at, http_method, http_path) VALUES ($1, $2, $3, $4, $5)';
-  const value = [binId, mongoId, receivedAt, httpMethod, httpPath]
+async function createRequest(binId, mongoId, httpMethod, httpPath) {
+  const text = 'INSERT INTO requests (bin_id, mongo_id, http_method, http_path) VALUES ($1, $2, $3, $4)';
+  const value = [binId, mongoId, httpMethod, httpPath]
   try {
     await pool.query(text, value);
   } catch (err) {
