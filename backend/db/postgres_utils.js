@@ -1,8 +1,3 @@
-const path = require('path')
-require('dotenv').config({
-  override: true,
-  path: path.join(__dirname, '../.env')
-});
 const { Pool } = require('pg');
 
 const pool = new Pool({
@@ -15,9 +10,10 @@ const pool = new Pool({
 
 async function createBin(bin_path) {
   const text = 'INSERT INTO bins (bin_path) VALUES ($1)';
-  const value = [bin_path]
+  const value = [bin_path];
   try {
-    await pool.query(text, value);
+    const newBin = await pool.query(text, value);
+    return newBin;
   } catch (err) {
     console.error(err); // do better error handling
   }
@@ -25,16 +21,14 @@ async function createBin(bin_path) {
 
 async function getBinId(bin_path) {
   const text = 'SELECT id FROM bins WHERE bin_path = $1';
-  const value = [bin_path]
+  const value = [bin_path];
   try {
     const response = await pool.query(text, value);
-    bin_id = response['rows'];
-    return bin_id // returning an array of objects
+    const bin_id = response.rows;
+    return bin_id; // returning an array of objects
   } catch (err) {
     console.error(err); // do better error handling
   }
 }
 
-async function createRequest(bin_id, mongo_id, received_at, http_method, http_path) {
-
-}
+async function createRequest(bin_id, mongo_id, received_at, http_method, http_path) {}
