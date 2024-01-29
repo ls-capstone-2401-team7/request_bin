@@ -1,10 +1,3 @@
-const path = require('path')
-
-require('dotenv').config({
-  override: true,
-  path: path.join(__dirname, '../.env')
-});
-
 // necessary to disable automatic date parsing by node-postgres - see https://60devs.com/working-with-postgresql-timestamp-without-timezone-in-node.html
 var pg = require('pg');
 var types = pg.types;
