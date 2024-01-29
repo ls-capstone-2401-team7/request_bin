@@ -1,8 +1,8 @@
-
 // necessary to disable automatic date parsing by node-postgres - see https://60devs.com/working-with-postgresql-timestamp-without-timezone-in-node.html
-var pg = require('pg');
-var types = pg.types;
-types.setTypeParser(1114, function(stringValue) {
+const pg = require('pg');
+
+const { types } = pg;
+types.setTypeParser(1114, function (stringValue) {
   return stringValue;
 });
 
@@ -20,7 +20,7 @@ const pool = new Pool({
 // services to expose
 async function createBin(binPath) {
   const text = 'INSERT INTO bins (bin_path) VALUES ($1)';
-  const value = [binPath]
+  const value = [binPath];
   try {
     const newBin = await pool.query(text, value);
     return newBin;
@@ -31,17 +31,11 @@ async function createBin(binPath) {
 
 async function getBinId(binPath) {
   const text = 'SELECT id FROM bins WHERE bin_path = $1';
-  const value = [bin_path];
-
+  const value = [binPath];
   try {
     const response = await pool.query(text, value);
-    const bin_id = response.rows;
-    return bin_id; // returning an array of objects
-  const value = [binPath]
-  try {
-    const response = await pool.query(text, value);
-    binId = response['rows'][0].id; // response['rows'] returns an array of objects
-    return binId
+    const binId = response.rows[0].id; // response['rows'] returns an array of objects
+    return binId;
   } catch (err) {
     console.error(err); // do better error handling
   }
@@ -49,7 +43,7 @@ async function getBinId(binPath) {
 
 async function createRequest(binId, mongoId, httpMethod, httpPath) {
   const text = 'INSERT INTO requests (bin_id, mongo_id, http_method, http_path) VALUES ($1, $2, $3, $4)';
-  const value = [binId, mongoId, httpMethod, httpPath]
+  const value = [binId, mongoId, httpMethod, httpPath];
   try {
     await pool.query(text, value);
   } catch (err) {
@@ -59,17 +53,18 @@ async function createRequest(binId, mongoId, httpMethod, httpPath) {
 
 async function getAllRequestsInBin(binId) {
   const text = 'SELECT * FROM requests WHERE bin_id = $1';
-  const value = [binId]
+  const value = [binId];
   try {
     const response = await pool.query(text, value);
-    requests = response['rows']; // response['rows'] returns an array of objects
-    return requests
+    const requests = response.rows; // response['rows'] returns an array of objects
+    return requests;
   } catch (err) {
     console.error(err); // do better error handling
   }
 }
 
-async function deleteAllRequests() { // just a helper for our own internal testing use
+async function deleteAllRequests() {
+  // just a helper for our own internal testing use
   const text = 'DELETE FROM requests';
   try {
     await pool.query(text);
@@ -80,7 +75,7 @@ async function deleteAllRequests() { // just a helper for our own internal testi
 
 async function deleteAllRequestsInBin(binId) {
   const text = 'DELETE FROM requests WHERE bin_id = $1';
-  const value = [binId]
+  const value = [binId];
   try {
     // implement deleting reqeusts in mongoDb! must delete in mongoDb before deleting in postgres!
     await pool.query(text, value);
@@ -91,7 +86,7 @@ async function deleteAllRequestsInBin(binId) {
 
 async function deleteRequest(id) {
   const text = 'DELETE FROM requests WHERE id = $1';
-  const value = [id]
+  const value = [id];
   try {
     // implement deleting request in mongoDb! must delete in mongoDb before deleting in postgres!
     await pool.query(text, value);
@@ -100,9 +95,9 @@ async function deleteRequest(id) {
   }
 }
 
-async function deleteBin(binId) { 
+async function deleteBin(binId) {
   const text = 'DELETE FROM bins WHERE id = $1';
-  const value = [binId]
+  const value = [binId];
   try {
     await deleteAllRequestsInBin(binId);
     await pool.query(text, value);
@@ -120,4 +115,4 @@ module.exports = {
   deleteAllRequestsInBin,
   deleteBin,
   deleteRequest,
-}
+};
