@@ -1,9 +1,3 @@
-const path = require('path')
-
-require('dotenv').config({
-  override: true,
-  path: path.join(__dirname, '../.env')
-});
 
 // necessary to disable automatic date parsing by node-postgres - see https://60devs.com/working-with-postgresql-timestamp-without-timezone-in-node.html
 var pg = require('pg');
@@ -28,7 +22,8 @@ async function createBin(binPath) {
   const text = 'INSERT INTO bins (bin_path) VALUES ($1)';
   const value = [binPath]
   try {
-    await pool.query(text, value);
+    const newBin = await pool.query(text, value);
+    return newBin;
   } catch (err) {
     console.error(err); // do better error handling
   }
@@ -36,6 +31,12 @@ async function createBin(binPath) {
 
 async function getBinId(binPath) {
   const text = 'SELECT id FROM bins WHERE bin_path = $1';
+  const value = [bin_path];
+
+  try {
+    const response = await pool.query(text, value);
+    const bin_id = response.rows;
+    return bin_id; // returning an array of objects
   const value = [binPath]
   try {
     const response = await pool.query(text, value);

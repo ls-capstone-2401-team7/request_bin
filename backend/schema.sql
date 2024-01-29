@@ -1,4 +1,5 @@
-DROP TABLE IF EXISTS bins, requests;
+DROP TABLE IF EXISTS bins,
+requests;
 
 CREATE TABLE bins (
   id serial NOT NULL PRIMARY KEY,
@@ -13,7 +14,5 @@ CREATE TABLE requests (
   received_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
   http_method VARCHAR NOT NULL,
   http_path VARCHAR NOT NULL,
-  FOREIGN KEY (bin_id)
-      REFERENCES bins(id)
-      ON DELETE CASCADE
+  FOREIGN KEY (bin_id) REFERENCES bins(id) ON DELETE CASCADE
 );
