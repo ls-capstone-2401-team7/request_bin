@@ -3,7 +3,7 @@ requests;
 
 CREATE TABLE bins (
   id serial NOT NULL PRIMARY KEY,
-  bin_path VARCHAR NOT NULL,
+  bin_path VARCHAR NOT NULL UNIQUE,
   created_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC')
 );
 
