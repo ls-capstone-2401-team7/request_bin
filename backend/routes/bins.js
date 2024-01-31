@@ -56,11 +56,11 @@ router.delete('/:bin_path', async (req, res, next) => {
 
   promises.push(postgres.deleteBin(binPath));
   await Promise.all(promises);
-  res.json({ success: 'ok' });
+  return res.json({ success: 'ok' });
 });
 
 // DELETE a single request
-router.delete('/:bin_id/requests/:request_id', async (req, res) => {
+router.delete('/:bin_path/requests/:request_id', async (req, res) => {
   const requestId = req.params.request_id;
   const request = await postgres.getRequest(requestId);
   await postgres.deleteRequest(requestId);
@@ -69,9 +69,14 @@ router.delete('/:bin_id/requests/:request_id', async (req, res) => {
 });
 
 // DELETE all requests in bin
-router.delete('/:bin_id/requests', async (req, res) => {
-  const binId = req.params.bin_id;
-  const allRequests = await postgres.getAllRequestsInBin(binId);
+router.delete('/:bin_path/requests', async (req, res, next) => {
+  const binPath = req.params.bin_path;
+  let allRequests;
+  try {
+    allRequests = await postgres.getAllRequestsInBin(binPath);
+  } catch (error) {
+    return next(error);
+  }
   const promises = [];
 
   for (let i = 0; i < allRequests.length; i += 1) {
@@ -79,9 +84,9 @@ router.delete('/:bin_id/requests', async (req, res) => {
     promises.push(mongoDb.deleteRequest(mongoId));
   }
 
-  promises.push(postgres.deleteAllRequestsInBin(binId));
+  promises.push(postgres.deleteAllRequestsInBin(binPath));
   await Promise.all(promises);
-  res.json({ success: 'ok' });
+  return res.json({ success: 'ok' });
 });
 
 module.exports = router;

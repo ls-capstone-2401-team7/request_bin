@@ -42,7 +42,7 @@ router.all('/:bin_path/:remaining_path*?', async (req, res, next) => {
   const mongoId = mongoRequest.id;
   psqlDb.createRequest(binId, mongoId, req.method, req.path);
   // respond with success
-  res.json({ success: true }).status(200);
+  return res.json({ success: true }).status(200);
 });
 
 module.exports = router;

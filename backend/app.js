@@ -36,13 +36,6 @@ app.set('socketio', io);
 app.use('/api/bins', binRoutes);
 app.use('/api/endpoints', endpointRoutes);
 
-// Test route to remove
-app.get('/', (req, res) => {
-  const routeIo = req.app.get('socketio');
-  routeIo.emit('backend', 'message from backend');
-  res.send('Test Route to remove');
-});
-
 app.use((error, req, res, next) => {
   if (res.headerSent) {
     return next(error);
