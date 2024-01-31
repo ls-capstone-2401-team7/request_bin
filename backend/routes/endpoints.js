@@ -5,7 +5,6 @@ const router = express.Router();
 const psqlDb = require('../db/postgres_utils');
 
 const mongoDb = require('../db/mongo_utils');
-const { HttpError } = require('../helpers');
 
 // need to align together on mongoDB request format!
 function convertRequestToJSON(request) {
@@ -17,42 +16,23 @@ function convertRequestToJSON(request) {
     query: request.query,
   };
 
-  return JSON.stringify(obj);
+  return obj;
 }
 
 // log a received request
 
-router.all('/:bin_path/*', async (req, res) => {
+// route below is structured to work with both /:bin_path and /:bin_path/:however_many_optional_paths - see https://stackoverflow.com/questions/10020099/express-js-routing-optional-splat-param
+router.all('/:bin_path/:remaining_path*?', async (req, res, next) => {
   // check if bin exists and if it doesn't exist return error
   const uuid = req.params.bin_path;
-  const binId = await psqlDb.getBinId(uuid);
+  let binId;
 
-  if (binId === undefined) {
-    res.json({ error: 'That bin does not exist' }).status(400); // change object or status later
-    return;
+  try {
+    binId = await psqlDb.getBinId(uuid);
+  } catch (error) {
+    return next(error);
   }
 
-  // if bin does exist create request in bin
-  const requestJSON = convertRequestToJSON(req);
-
-  // add request to MongoDB
-  const mongoRequest = await mongoDb.createRequest(requestJSON);
-  // add request to Postgres
-  const mongoId = mongoRequest.id;
-  psqlDb.createRequest(binId, mongoId, req.method, req.path);
-  // respond with success
-  res.json({ success: true }).status(200);
-});
-
-router.all('/:bin_path', async (req, res) => {
-  // check if bin exists and if it doesn't exist return error
-  const uuid = req.params.bin_path;
-  const binId = await psqlDb.getBinId(uuid);
-
-  if (binId === undefined) {
-    res.json({ error: 'That bin does not exist' }).status(400); // change object or status later
-    return;
-  }
   // if bin does exist create request in bin
   const requestJSON = convertRequestToJSON(req);
 

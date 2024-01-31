@@ -17,6 +17,8 @@ const pool = new Pool({
   database: process.env.DATABASE,
 });
 
+const { HttpError } = require('../helpers');
+
 // services to expose
 async function createBin(binPath) {
   const text = 'INSERT INTO bins (bin_path) VALUES ($1) RETURNING *';
@@ -36,11 +38,11 @@ async function getBinId(binPath) {
     const response = await pool.query(text, value);
     const bin = response.rows[0];
     if (bin === undefined) {
-      return undefined;
+      throw Error;
     }
     return bin.id;
   } catch (err) {
-    console.error(err); // do better error handling
+    throw new HttpError('Bin does not exist', 400);
   }
 }
 
@@ -54,7 +56,10 @@ async function createRequest(binId, mongoId, httpMethod, httpPath) {
   }
 }
 
-async function getAllRequestsInBin(binId) {
+async function getAllRequestsInBin(binPath) {
+  // get the bin id
+  const binId = await getBinId(binPath);
+
   const text = 'SELECT * FROM requests WHERE bin_id = $1';
   const value = [binId];
   try {
@@ -76,7 +81,23 @@ async function deleteAllRequests() {
   }
 }
 
-async function deleteAllRequestsInBin(binId) {
+async function getRequest(requestId) {
+  const text = 'SELECT * FROM requests WHERE id = $1';
+  const value = [requestId];
+
+  try {
+    const response = await pool.query(text, value);
+    const request = response.rows[0];
+    return request;
+  } catch (err) {
+    console.error(err); // do better error handling
+  }
+}
+
+async function deleteAllRequestsInBin(binPath) {
+  // get the bin id
+  const binId = await getBinId(binPath);
+
   const text = 'DELETE FROM requests WHERE bin_id = $1';
   const value = [binId];
   try {
@@ -98,7 +119,10 @@ async function deleteRequest(id) {
   }
 }
 
-async function deleteBin(binId) {
+async function deleteBin(binPath) {
+  // get the bin id
+  const binId = await getBinId(binPath);
+
   const text = 'DELETE FROM bins WHERE id = $1';
   const value = [binId];
   try {
@@ -118,4 +142,5 @@ module.exports = {
   deleteAllRequestsInBin,
   deleteBin,
   deleteRequest,
+  getRequest,
 };

@@ -47,7 +47,8 @@ app.use((error, req, res, next) => {
   if (res.headerSent) {
     return next(error);
   }
-  res.json({ message: error.message, code: error.code });
+  res.status(error.code);
+  return res.json({ message: error.message, code: error.code });
 });
 
 module.exports = httpServer;

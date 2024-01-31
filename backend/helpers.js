@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 function convertDbTimetoDateObj(databaseTime) {
   databaseTime[10] = 'T';
   databaseTime = `${databaseTime.substring(0, 23)}Z`;
