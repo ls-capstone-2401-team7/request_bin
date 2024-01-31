@@ -14,6 +14,8 @@ const io = require('socket.io')(httpServer, {
     origin: '*',
   },
 });
+const binRoutes = require('./routes/bins');
+const endpointRoutes = require('./routes/endpoints');
 
 app.use(cors());
 app.use(express.json());
@@ -31,11 +33,21 @@ io.on('connection', (socket) => {
 
 app.set('socketio', io);
 
+app.use('/api/bins', binRoutes);
+app.use('/api/endpoints', endpointRoutes);
+
 // Test route to remove
 app.get('/', (req, res) => {
   const routeIo = req.app.get('socketio');
   routeIo.emit('backend', 'message from backend');
   res.send('Test Route to remove');
+});
+
+app.use((error, req, res, next) => {
+  if (res.headerSent) {
+    return next(error);
+  }
+  res.json({ message: error.message, code: error.code });
 });
 
 module.exports = httpServer;

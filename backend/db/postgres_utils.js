@@ -19,13 +19,13 @@ const pool = new Pool({
 
 // services to expose
 async function createBin(binPath) {
-  const text = 'INSERT INTO bins (bin_path) VALUES ($1)';
+  const text = 'INSERT INTO bins (bin_path) VALUES ($1) RETURNING *';
   const value = [binPath];
   try {
     const newBin = await pool.query(text, value);
-    return newBin;
+    return newBin.rows;
   } catch (err) {
-    console.error(err); // do better error handling
+    throw Error(err);
   }
 }
 
@@ -34,8 +34,11 @@ async function getBinId(binPath) {
   const value = [binPath];
   try {
     const response = await pool.query(text, value);
-    const binId = response.rows[0].id; // response['rows'] returns an array of objects
-    return binId;
+    const bin = response.rows[0];
+    if (bin === undefined) {
+      return undefined;
+    }
+    return bin.id;
   } catch (err) {
     console.error(err); // do better error handling
   }
