@@ -59,7 +59,6 @@ async function createRequest(binId, mongoId, httpMethod, httpPath) {
 async function getAllRequestsInBin(binPath) {
   // get the bin id
   const binId = await getBinId(binPath);
-
   const text = 'SELECT * FROM requests WHERE bin_id = $1';
   const value = [binId];
   try {
@@ -122,11 +121,10 @@ async function deleteRequest(id) {
 async function deleteBin(binPath) {
   // get the bin id
   const binId = await getBinId(binPath);
-
   const text = 'DELETE FROM bins WHERE id = $1';
   const value = [binId];
   try {
-    await deleteAllRequestsInBin(binId);
+    await deleteAllRequestsInBin(binPath);
     await pool.query(text, value);
   } catch (err) {
     console.error(err); // do better error handling
