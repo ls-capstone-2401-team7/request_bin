@@ -87,9 +87,12 @@ async function getRequest(requestId) {
   try {
     const response = await pool.query(text, value);
     const request = response.rows[0];
+    if (request === undefined) {
+      throw Error;
+    }
     return request;
   } catch (err) {
-    console.error(err); // do better error handling
+    throw new HttpError('Request does not exist', 400);
   }
 }
 

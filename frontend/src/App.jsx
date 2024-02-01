@@ -23,7 +23,7 @@ function App() {
     <>
     <Routes>
       <Route path='/' element={<Hello />}></Route>
-      <Route path='/test' element={<Test />}></Route>
+      <Route path='/display/:bin_path' element={<Test />}></Route>
     </Routes>
 
     </>

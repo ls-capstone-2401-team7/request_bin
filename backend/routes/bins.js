@@ -23,6 +23,21 @@ router.get('/:bin_path/requests', async (req, res, next) => {
   }
 });
 
+// GET a single requests details from MongoDB
+router.get('/:bin_path/request/:request_id', async (req, res, next) => {
+  const requestId = req.params.request_id;
+  let request;
+  try {
+    request = await postgres.getRequest(requestId);
+  } catch (error) {
+    return next(error);
+  }
+
+  const mongoId = request.mongo_id;
+  const result = await mongoDb.getRequest(mongoId);
+  res.json(result);
+});
+
 // CREATE a new bin
 router.post('/', async (req, res, next) => {
   const binPath = uuidv4();
