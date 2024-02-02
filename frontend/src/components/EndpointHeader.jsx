@@ -1,7 +1,7 @@
 const EndpointHeader = ({ binPath }) => {
   console.log(window.location.hostname)
 
-  const endpoint = `https://www.alex-bair.com/api/endpoints/${binPath}`;
+  const endpoint = `https://www.alessio-novi.cloud/api/endpoints/${binPath}`;
 
   const copyHandler = () => {
     navigator.clipboard.writeText(endpoint)

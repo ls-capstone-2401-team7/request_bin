@@ -40,8 +40,10 @@ router.all('/:bin_path/:remaining_path*?', async (req, res, next) => {
   const mongoRequest = await mongoDb.createRequest(requestJSON);
   // add request to Postgres
   const mongoId = mongoRequest.id;
-  psqlDb.createRequest(binId, mongoId, req.method, req.path);
+  const newRequest = await psqlDb.createRequest(binId, mongoId, req.method, req.path);
   // respond with success
+  const appSocket = req.app.get('socketio');
+  appSocket.to(uuid).emit('newRequest', newRequest);
   return res.json({ success: true }).status(200);
 });
 

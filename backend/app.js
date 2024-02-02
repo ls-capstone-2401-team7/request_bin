@@ -9,29 +9,29 @@ const cors = require('cors');
 
 const app = express();
 const httpServer = require('http').createServer(app);
-// const io = require('socket.io')(httpServer, {
-//   cors: {
-//     origin: '*',
-//   },
-// });
+const io = require('socket.io')(httpServer, {
+  cors: {
+    origin: '*',
+  },
+});
 const binRoutes = require('./routes/bins');
 const endpointRoutes = require('./routes/endpoints');
 
 app.use(cors());
 app.use(express.json());
 
-// io.on('connection', (socket) => {
-//   console.log('user connected');
+io.on('connection', (socket) => {
+  console.log('user connected');
 
-//   socket.on('frontend', (message) => {
-//     console.log(message);
-//   });
-//   socket.on('disconnect', function () {
-//     console.log('user disconnected');
-//   });
-// });
+  socket.on('binRomm', (binRomm) => {
+    socket.join(binRomm);
+  });
+  socket.on('disconnect', function () {
+    console.log('user disconnected');
+  });
+});
 
-// app.set('socketio', io);
+app.set('socketio', io);
 
 app.use('/api/bins', binRoutes);
 app.use('/api/endpoints', endpointRoutes);

@@ -1,7 +1,8 @@
 import axios from "axios";
 
 // create new bin
-const URL = "https://alex-bair.com/api/bins"; // make sure to update this with your domain! CANNOT USE LOCALHOST HERE!
+// const URL = "https://alex-bair.com/api/bins"; // make sure to update this with your domain! CANNOT USE LOCALHOST HERE!
+const URL = "http://localhost:3000/api/bins";
 
 async function createBin() {
   const result = await axios.post(URL);
