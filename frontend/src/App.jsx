@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
 // import { io } from 'socket.io-client';
 import { Route, Routes } from 'react-router-dom';
-import Hello from './components/Hello'
-import Test from './components/Test'
+import Home from './components/Home'
+import Bin from './components/Bin'
 
 import './App.css'
 // const socket = io('http://localhost:3000');
@@ -21,11 +19,10 @@ function App() {
   // }, [])
   return (
     <>
-    <Routes>
-      <Route path='/' element={<Hello />}></Route>
-      <Route path='/display/:bin_path' element={<Test />}></Route>
-    </Routes>
-
+      <Routes>
+        <Route path='/' element={<Home />}></Route>
+        <Route path='/display/:bin_path' element={<Bin />}></Route>
+      </Routes>
     </>
   )
 }

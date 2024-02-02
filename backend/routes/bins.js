@@ -24,7 +24,7 @@ router.get('/:bin_path/requests', async (req, res, next) => {
 });
 
 // GET a single requests details from MongoDB
-router.get('/:bin_path/request/:request_id', async (req, res, next) => {
+router.get('/requests/:request_id', async (req, res, next) => {
   const requestId = req.params.request_id;
   let request;
   try {
