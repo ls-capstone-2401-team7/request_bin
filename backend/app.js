@@ -11,7 +11,8 @@ const app = express();
 const httpServer = require('http').createServer(app);
 const io = require('socket.io')(httpServer, {
   cors: {
-    origin: '*',
+    origin: 'https://alessio-novi.cloud',
+    methods: ['GET', 'POST'],
   },
 });
 const binRoutes = require('./routes/bins');
