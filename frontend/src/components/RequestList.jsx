@@ -3,7 +3,7 @@ import RequestLine from "./RequestLine";
 const RequestList = ({requests, setSelectedRequest}) => {
 
   return (
-    <ul>
+    <ul className="request-list">
       {requests.map( req => {
         return <RequestLine key={req.id} request={req} setSelectedRequest={setSelectedRequest}/>
       })}

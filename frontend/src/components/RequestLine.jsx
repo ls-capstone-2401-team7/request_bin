@@ -1,4 +1,4 @@
-import helpers from '../services'
+import helpers from "../services";
 
 const RequestLine = ({ request, setSelectedRequest }) => {
   const path = helpers.removeBinFromPath(request.http_path);
@@ -6,20 +6,21 @@ const RequestLine = ({ request, setSelectedRequest }) => {
   const time = request.received_at;
 
   function convertDbTimetoDateObj(databaseTime) {
-    databaseTime = databaseTime.slice(0, 10) + 'T' + databaseTime.slice(11, 23) + 'Z';
+    databaseTime =
+      databaseTime.slice(0, 10) + "T" + databaseTime.slice(11, 23) + "Z";
     return new Date(databaseTime);
   }
-  
+
   const onClick = async (event) => {
     event.preventDefault();
-    const req = await helpers.getRequest(request.id)
+    const req = await helpers.getRequest(request.id);
     req.date = convertDbTimetoDateObj(time);
     setSelectedRequest(req);
-  }
+  };
 
   return (
     <a href="#" onClick={onClick}>
-      <li>
+      <li className="request_li">
         {convertDbTimetoDateObj(time).toLocaleTimeString()} {method} {path}
       </li>
     </a>

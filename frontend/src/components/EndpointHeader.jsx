@@ -8,9 +8,9 @@ const EndpointHeader = ({ binPath }) => {
   }
 
   return (
-    <div>
-      <p>Endpoint: { endpoint }</p>
-      <button onClick={copyHandler}>Copy </button>
+    <div className="endpoint-header">
+      <button className="copy_style" onClick={copyHandler}>Copy </button>
+      <span> Endpoint: { endpoint }</span>
     </div>
   )
 }

@@ -10,9 +10,15 @@ const Home = () => {
   }
   
   return (
-    <button onClick={newBinHandler}>
-      Create a bin
-    </button>
+    <>
+      <h1>Request Bin</h1>
+      <div className='home-page'>
+
+        <button className='copy_style' onClick={newBinHandler}>
+          Create a bin
+        </button>
+      </div>
+    </>
   )
 }
 

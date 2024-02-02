@@ -23,8 +23,14 @@ const Bin = () => {
   return (
     <div>
       <EndpointHeader binPath={bin_path}/>
-      <RequestList requests={requestList} setSelectedRequest={setSelectedRequest}/>
-      {selectedRequest && <RequestDetails request={selectedRequest}/>}
+      <div className="container">
+        <RequestList requests={requestList} setSelectedRequest={setSelectedRequest}/>
+        <div>
+        {selectedRequest && <RequestDetails request={selectedRequest}/>}
+        </div>
+        
+      </div>
+
     </div>
   );
 };

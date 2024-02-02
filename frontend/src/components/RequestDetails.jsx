@@ -17,11 +17,16 @@ Body component (if exists)
 */
 
   return (
-    <div>
+    <div className="request-details">
       <SharedDetails request={request}/>
-      <HeadersAndQuery obj={request.payload.headers}/>
-      {request.payload.query && <HeadersAndQuery obj={request.payload.query}/>}
-      {request.payload.body && <pre>{JSON.stringify(request.payload.body)}</pre>}
+      <HeadersAndQuery type={'Headers'} obj={request.payload.headers}/>
+      {request.payload.query && <HeadersAndQuery type={'Query Parameters'} obj={request.payload.query}/>}
+      {request.payload.body &&
+        <>
+          <b>{"Body"}</b>
+          <pre>{JSON.stringify(request.payload.body)}</pre>
+        </>
+      }
     </div>
   );
 };
